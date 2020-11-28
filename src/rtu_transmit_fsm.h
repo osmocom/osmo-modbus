@@ -1,0 +1,21 @@
+/* Figure 14: RTU  transmission mode state diagram */
+#pragma once
+
+enum rtu_transmit_state {
+	RTU_TRANSMIT_ST_INITIAL,
+	RTU_TRANSMIT_ST_IDLE,
+	RTU_TRANSMIT_ST_EMISSION,
+	RTU_TRANSMIT_ST_RECEPTION,
+	RTU_TRANSMIT_ST_CTRL_WAIT,
+};
+
+enum rtu_transmit_event {
+	RTU_TRANSMIT_EV_START,
+	RTU_TRANSMIT_EV_T15_TIMEOUT,
+	RTU_TRANSMIT_EV_T35_TIMEOUT,
+	RTU_TRANSMIT_EV_CHAR_RECEIVED,
+	RTU_TRANSMIT_EV_DEMAND_OF_EMISSION,
+	_NUM_RTU_TRANSMIT_EV,
+};
+
+extern struct osmo_fsm rtu_transmit_fsm;
