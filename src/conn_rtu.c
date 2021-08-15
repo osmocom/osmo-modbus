@@ -345,11 +345,17 @@ static bool osmo_modbus_conn_rtu_is_connected(struct osmo_modbus_conn* conn)
 static int osmo_modbus_conn_rtu_tx_prim(struct osmo_modbus_conn* conn, struct osmo_modbus_prim *prim)
 {
 	struct osmo_modbus_conn_rtu* rtu = (struct osmo_modbus_conn_rtu*) conn->proto;
+	int rc;
 
 	OSMO_ASSERT(!rtu->tx_msg);
 	rtu->tx_msg = prim2rtu(prim);
 
-	return osmo_fsm_inst_dispatch(rtu->fi, RTU_TRANSMIT_EV_DEMAND_OF_EMISSION, NULL);
+	rc = osmo_fsm_inst_dispatch(rtu->fi, RTU_TRANSMIT_EV_DEMAND_OF_EMISSION, NULL);
+	if (rc < 0) {
+		msgb_free(rtu->tx_msg);
+		rtu->tx_msg = NULL;
+	}
+	return rc;
 }
 
 static void osmo_modbus_conn_rtu_free(struct osmo_modbus_conn* conn)
